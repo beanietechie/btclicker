@@ -6,6 +6,7 @@ Usage:
 Run `btclicker` as any user.
 
 How to install:
+Ensure you have ncurses installed.
 Run `make install` as root.
 
 How to uninstall:
