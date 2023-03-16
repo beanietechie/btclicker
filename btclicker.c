@@ -1,10 +1,12 @@
 #include <stdio.h>
-#include <stdlib.h>
+//#include <stdlib.h>
 #include <ncurses.h>
 
+#include "config.h"
+
 typedef struct {
-	unsigned long long score;
 	unsigned long long gain;
+	unsigned long long score;
 } Game;
 
 int main(void) {
@@ -16,9 +18,10 @@ int main(void) {
 	cbreak();
 	noecho();
 	
-	while (1) {
+	char running = 1;
+	while (running) {
 		char choice;
-		unsigned long long upgradecost = game.gain * game.gain * game.gain * 5;
+		const unsigned long long upgradecost = getupgradecost(game.gain);
 		
 		clear();
 		printw("Score: %lld\nScore per click: %lld\n", game.score, game.gain);
@@ -34,7 +37,7 @@ int main(void) {
 		} else if (choice == 'q') {
 			clear();
 			endwin();
-			exit(0);
+			running = 0;
 		}
 	}
 	return 0;
