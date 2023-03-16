@@ -1,15 +1,24 @@
+include config.mk
+
+PROG_NAME=btclicker
+CFLAGS=-Wall -Wextra -Werror
+LIBS=-lncurses
+
+RM=rm -f
+CP=cp
+
 all: build
 
 .PHONY: clean build install
 
 clean:
-	rm -rf *.o btclicker
+	$(RM) $(PROG_NAME)
 
 build:
-	gcc -Wall -Wextra -O3 -lncurses -o btclicker *.c
+	$(CC) $(CFLAGS) $(LIBS) -o $(PROG_NAME) $(wildcard *.c)
 
 install: build
-	cp btclicker /usr/bin
+	$(CP) $(PROG_NAME) $(INSTALL_DESTINATION)
 
 uninstall:
-	rm /usr/bin/btclicker
+	$(RM) $(INSTALL_DESTINATION)/$(PROG_NAME)
