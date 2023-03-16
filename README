@@ -1,0 +1,12 @@
+BTClicker
+
+A minimal free and open source clicker game for the terminal.
+
+Usage:
+Run `btclicker` as any user.
+
+How to install:
+Run `make install` as root.
+
+How to uninstall:
+Run `make uninstall` as root.
