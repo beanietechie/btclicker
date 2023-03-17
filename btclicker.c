@@ -1,5 +1,6 @@
 #include <stdio.h>
-//#include <stdlib.h>
+#include <stdlib.h>
+#include <string.h>
 #include <ncurses.h>
 
 #include "config.h"
@@ -10,14 +11,36 @@ typedef struct {
 } Game;
 
 int main(void) {
-	Game game;
-	game.score = 0;
-	game.gain = 1;
+	char savefilepath[4096];
+	strcpy(savefilepath, getenv("HOME"));
+	strcat(savefilepath, "/.config/btclickersave.bin");
 
 	initscr();
 	cbreak();
 	noecho();
-	
+	clear();
+
+	printw("Attempt to load progress from save file? [Y/n]");
+	char choice = getch();
+
+	Game game;
+
+	if (choice != 'n') {
+		FILE *savefile = fopen(savefilepath, "rb");
+		if (savefile != NULL) {
+			fread(&game, sizeof(Game), 1, savefile);
+			fclose(savefile);
+		} else {
+			clear();
+			endwin();
+			fprintf(stderr, "btclicker: Could not open save file: ~/.config/btclickersave.bin\n");
+			return 1;
+		}
+	} else {
+		game.gain = 1;
+		game.score = 0;
+	}
+
 	char running = 1;
 	while (running) {
 		char choice;
@@ -36,6 +59,22 @@ int main(void) {
 			game.gain++;
 		} else if (choice == 'q') {
 			clear();
+			printw("Attempt to save progress to save file? [Y/n]");
+			char choice = getch();
+
+			if (choice != 'n') {
+				FILE *savefile = fopen(savefilepath, "wb");
+				if (savefile != NULL) {
+					fwrite(&game, sizeof(Game), 1, savefile);
+					fclose(savefile);
+				} else {
+					clear();
+					endwin();
+					fprintf(stderr, "btclicker: Could not open save file: ~/.config/btclickersave.bin\n");
+					return 1;
+				}
+			}
+
 			endwin();
 			running = 0;
 		}
